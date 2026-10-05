@@ -1,0 +1,10 @@
+# Python dependencies for AI engine modules
+opencv-python
+ultralytics
+insightface
+onnxruntime
+torch
+torchvision
+numpy
+pandas
+scikit-learn
