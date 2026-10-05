@@ -12,9 +12,9 @@ def main():
     print("====================================")
     print()
 
-    # ==================================
+    # ====================================
     # STEP 1: LIVENESS VERIFICATION
-    # ==================================
+    # ====================================
 
     print("STEP 1: LIVENESS VERIFICATION")
     print()
@@ -49,18 +49,22 @@ def main():
     print("Liveness verification successful.")
     print()
 
-    # ==================================
+    # ====================================
     # STEP 2: FACE RECOGNITION
-    # ==================================
+    # ====================================
 
     print("STEP 2: FACE RECOGNITION")
     print()
 
     recognition_result = run_face_recognition()
 
-    # ==================================
+    # Get recognition status and actual user
+    face_recognition_passed = recognition_result["recognized"]
+    recognized_user = recognition_result["user"]
+
+    # ====================================
     # STEP 3: ACCESS CONTROL
-    # ==================================
+    # ====================================
 
     print()
     print("STEP 3: ACCESS CONTROL")
@@ -68,20 +72,24 @@ def main():
 
     decision = make_access_decision(
         liveness_result=liveness_result,
-        face_recognition_result=recognition_result
+        face_recognition_result=face_recognition_passed
     )
 
     print("ACCESS:", decision["access"])
     print("Reason:", decision["reason"])
 
-    # ==================================
-    # STEP 4: SECURITY LOG
-    # ==================================
+    # ====================================
+    # STEP 4: SECURITY LOGGING
+    # ====================================
+
+    print()
+    print("STEP 4: SECURITY LOGGING")
+    print()
 
     if decision["access"] == "GRANTED":
 
         log_access(
-            user="Shivamruth",
+            user=recognized_user,
             liveness_result="PASS",
             face_recognition_result="PASS",
             access_result="GRANTED"
@@ -90,7 +98,7 @@ def main():
     else:
 
         log_access(
-            user="UNKNOWN",
+            user=recognized_user if recognized_user else "UNKNOWN",
             liveness_result="PASS",
             face_recognition_result="FAIL",
             access_result="DENIED"

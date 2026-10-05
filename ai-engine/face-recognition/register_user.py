@@ -1,20 +1,74 @@
 import cv2
-import insightface
 from insightface.app import FaceAnalysis
-import numpy as np
 import json
 import os
 
 
-# User name
-USER_NAME = "Shivamruth"
+# ============================================================
+# SETTINGS
+# ============================================================
 
-
-# Create database path
 DB_PATH = "database/users.json"
 
 
-# Load InsightFace model
+# ============================================================
+# GET USER NAME
+# ============================================================
+
+USER_NAME = input("Enter user name: ").strip()
+
+if not USER_NAME:
+    print("ERROR: User name cannot be empty.")
+    exit()
+
+
+# ============================================================
+# LOAD EXISTING USERS
+# ============================================================
+
+os.makedirs("database", exist_ok=True)
+
+if os.path.exists(DB_PATH):
+
+    try:
+        with open(DB_PATH, "r") as file:
+            users = json.load(file)
+
+    except (json.JSONDecodeError, FileNotFoundError):
+        users = []
+
+else:
+    users = []
+
+
+# ============================================================
+# CHECK DATABASE FORMAT
+# ============================================================
+
+if not isinstance(users, list):
+
+    print("ERROR: users.json is not in multi-user format.")
+    exit()
+
+
+# ============================================================
+# CHECK DUPLICATE USER
+# ============================================================
+
+for user in users:
+
+    if user["name"].lower() == USER_NAME.lower():
+
+        print()
+        print("ERROR: User already exists.")
+        print("Existing user:", user["name"])
+        exit()
+
+
+# ============================================================
+# LOAD INSIGHTFACE
+# ============================================================
+
 app = FaceAnalysis(
     name="buffalo_l",
     providers=[
@@ -29,38 +83,91 @@ app.prepare(
 )
 
 
-# Open camera
+# ============================================================
+# OPEN CAMERA
+# ============================================================
+
 camera = cv2.VideoCapture(0)
 
-print("Look at the camera for registration...")
+if not camera.isOpened():
 
+    print("ERROR: Could not open webcam.")
+    exit()
+
+
+print()
+print("====================================")
+print("      SECUREHOMEAI REGISTRATION")
+print("====================================")
+print()
+print("Registering user:", USER_NAME)
+print()
+print("Look at the camera.")
+print("Press R to register.")
+print("Press Q to cancel.")
+print()
+
+
+# ============================================================
+# REGISTRATION STATE
+# ============================================================
 
 registered = False
 
+
+# ============================================================
+# REGISTRATION LOOP
+# ============================================================
 
 while True:
 
     ret, frame = camera.read()
 
     if not ret:
+
+        print("ERROR: Could not read camera.")
         break
 
+
+    # Mirror camera
+
+    frame = cv2.flip(frame, 1)
+
+
+    # Detect faces
 
     faces = app.get(frame)
 
 
-    for face in faces:
+    # --------------------------------------------------------
+    # DRAW DETECTED FACE
+    # --------------------------------------------------------
 
-        # Draw face box
+    if len(faces) > 0:
+
+        face = faces[0]
+
         box = face.bbox.astype(int)
 
         x1, y1, x2, y2 = box
+
 
         cv2.rectangle(
             frame,
             (x1, y1),
             (x2, y2),
-            (0,255,0),
+            (0, 255, 0),
+            2
+        )
+
+
+        cv2.putText(
+            frame,
+            f"User: {USER_NAME}",
+            (30, 40),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            (0, 255, 0),
             2
         )
 
@@ -68,47 +175,63 @@ while True:
         cv2.putText(
             frame,
             "Press R to Register",
-            (30,40),
+            (30, 75),
             cv2.FONT_HERSHEY_SIMPLEX,
-            1,
-            (0,255,0),
+            0.8,
+            (0, 255, 0),
             2
         )
 
 
-        # Register when R pressed
-        key = cv2.waitKey(1)
+        cv2.putText(
+            frame,
+            "Press Q to Cancel",
+            (30, 110),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            (0, 255, 0),
+            2
+        )
 
 
-        if key == ord('r'):
+    else:
 
-            embedding = face.embedding.tolist()
-
-
-            user_data = {
-                "name": USER_NAME,
-                "embedding": embedding
-            }
-
-
-            os.makedirs(
-                "database",
-                exist_ok=True
-            )
+        cv2.putText(
+            frame,
+            "No face detected",
+            (30, 40),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            (0, 0, 255),
+            2
+        )
 
 
-            with open(DB_PATH,"w") as file:
-                json.dump(
-                    user_data,
-                    file
-                )
+        cv2.putText(
+            frame,
+            "Look at the camera",
+            (30, 75),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            (0, 0, 255),
+            2
+        )
 
 
-            print("User Registered Successfully")
+        cv2.putText(
+            frame,
+            "Press Q to Cancel",
+            (30, 110),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            (0, 0, 255),
+            2
+        )
 
-            registered = True
-            break
 
+    # --------------------------------------------------------
+    # SHOW CAMERA
+    # --------------------------------------------------------
 
     cv2.imshow(
         "SecureHomeAI - User Registration",
@@ -116,14 +239,95 @@ while True:
     )
 
 
-    if registered:
+    # --------------------------------------------------------
+    # KEYBOARD INPUT
+    #
+    # IMPORTANT:
+    # waitKey is called ONLY ONCE per loop.
+    # --------------------------------------------------------
+
+    key = cv2.waitKey(1) & 0xFF
+
+
+    # --------------------------------------------------------
+    # REGISTER
+    # --------------------------------------------------------
+
+    if key == ord("r"):
+
+        if len(faces) == 0:
+
+            print()
+            print("No face detected.")
+            print("Please look at the camera and try again.")
+            continue
+
+
+        face = faces[0]
+
+        embedding = face.embedding.tolist()
+
+
+        new_user = {
+            "name": USER_NAME,
+            "embedding": embedding
+        }
+
+
+        users.append(new_user)
+
+
+        with open(DB_PATH, "w") as file:
+
+            json.dump(
+                users,
+                file,
+                indent=4
+            )
+
+
+        print()
+        print("====================================")
+        print("       USER REGISTERED")
+        print("====================================")
+        print("Name:", USER_NAME)
+        print("Total registered users:", len(users))
+        print()
+
+
+        registered = True
+
         break
 
 
-    if cv2.waitKey(1) & 0xFF == ord('q'):
+    # --------------------------------------------------------
+    # CANCEL
+    # --------------------------------------------------------
+
+    if key == ord("q"):
+
+        print()
+        print("Registration cancelled.")
         break
 
 
+# ============================================================
+# CLEANUP
+# ============================================================
 
 camera.release()
+
 cv2.destroyAllWindows()
+
+
+# ============================================================
+# FINAL MESSAGE
+# ============================================================
+
+if registered:
+
+    print("Registration completed successfully.")
+
+else:
+
+    print("Registration was not completed.")
