@@ -1,67 +1,72 @@
+
 import json
 import os
 from datetime import datetime
 
-
-LOG_PATH = "database/security_logs.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DB_DIR = os.path.join(BASE_DIR, "database")
+LOG_PATH = os.path.join(DB_DIR, "security_logs.json")
 
 
 def log_access(
     user,
     liveness_result,
     face_recognition_result,
-    access_result
+    access_result,
+    reason=None
 ):
-    """
-    Store one authentication attempt in the security log.
-    """
+    """Append one authentication event without silently discarding logs."""
 
-    os.makedirs("database", exist_ok=True)
+    os.makedirs(DB_DIR, exist_ok=True)
 
-    # Create log file if it does not exist
     if os.path.exists(LOG_PATH):
-
         try:
-            with open(LOG_PATH, "r") as file:
+            with open(LOG_PATH, "r", encoding="utf-8") as file:
                 logs = json.load(file)
+        except (json.JSONDecodeError, OSError) as exc:
+            raise RuntimeError(
+                f"Cannot safely read security log: {exc}"
+            ) from exc
 
-        except (json.JSONDecodeError, FileNotFoundError):
-            logs = []
-
+        if not isinstance(logs, list):
+            raise RuntimeError(
+                "Security log must contain a JSON list. "
+                "Existing log was not modified."
+            )
     else:
         logs = []
 
-    # Create authentication record
     log_entry = {
-        "timestamp": datetime.now().strftime(
-            "%Y-%m-%d %H:%M:%S"
+        "timestamp": datetime.now().astimezone().isoformat(
+            timespec="seconds"
         ),
         "user": user,
         "liveness": liveness_result,
         "face_recognition": face_recognition_result,
-        "access": access_result
+        "access": access_result,
+        "reason": reason or "Not provided"
     }
 
     logs.append(log_entry)
 
-    # Save updated logs
-    with open(LOG_PATH, "w") as file:
-        json.dump(
-            logs,
-            file,
-            indent=4
-        )
+    # Write to a temporary file first, then replace the log.
+    temp_path = LOG_PATH + ".tmp"
+
+    try:
+        with open(temp_path, "w", encoding="utf-8") as file:
+            json.dump(logs, file, indent=4)
+            file.write("\n")
+            file.flush()
+            os.fsync(file.fileno())
+
+        os.replace(temp_path, LOG_PATH)
+    finally:
+        if os.path.exists(temp_path):
+            os.remove(temp_path)
 
     print()
     print("Security event logged.")
 
+
 if __name__ == "__main__":
-
-    log_access(
-        user="Shivamruth",
-        liveness_result="PASS",
-        face_recognition_result="PASS",
-        access_result="GRANTED"
-    )
-
-    print("Logging test completed.")
+    print("Logger self-test is disabled to avoid adding fake events.")
