@@ -1,0 +1,47 @@
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+  font-size: 12px;
+}
+
+th {
+  color: #8190a8;
+  font-weight: 500;
+  text-align: left;
+  background: #19263a;
+}
+
+th, td {
+  padding: 14px 12px;
+  border-bottom: 1px solid #27354b;
+}
+
+td {
+  color: #c5cede;
+}
+
+tbody tr:hover {
+  background: #1a2940;
+}
+
+.pill {
+  padding: 5px 9px;
+  border-radius: 20px;
+  font-size: 10px;
+}
+
+.pill.success {
+  background: #153b2d;
+  color: #4ade80;
+}
+
+.pill.danger {
+  background: #431e2b;
+  color: #fb7185;
+}

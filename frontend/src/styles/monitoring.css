@@ -1,0 +1,61 @@
+.monitor-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.camera-placeholder {
+  min-height: 340px;
+  background: #080e19;
+  border: 1px dashed #42516b;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.camera-symbol {
+  font-size: 55px;
+  color: #64748b;
+  margin-bottom: 18px;
+}
+
+.camera-placeholder p {
+  max-width: 380px;
+  color: #8793a9;
+  font-size: 12px;
+  line-height: 1.7;
+  margin-top: 12px;
+}
+
+.system-panel h3 {
+  margin-bottom: 20px;
+}
+
+.system-status-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 18px 0;
+  border-bottom: 1px solid #27354b;
+  font-size: 12px;
+}
+
+.system-status-row span {
+  color: #9ba8bd;
+}
+
+.system-status-row strong {
+  font-size: 10px;
+}
+
+@media (max-width: 850px) {
+  .monitor-grid {
+    grid-template-columns: 1fr;
+  }
+}

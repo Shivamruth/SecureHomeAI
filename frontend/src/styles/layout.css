@@ -1,0 +1,189 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  flex-shrink: 0;
+  background: #101a2b;
+  border-right: 1px solid #253149;
+  padding: 25px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px 35px;
+}
+
+.brand-icon {
+  background: #2563eb;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  font-size: 23px;
+  font-weight: bold;
+}
+
+.brand h2 {
+  font-size: 17px;
+}
+
+.brand span {
+  font-size: 9px;
+  color: #8290a8;
+  letter-spacing: 1px;
+}
+
+.nav-heading {
+  color: #697991;
+  font-size: 10px;
+  padding: 0 12px 12px;
+  letter-spacing: 1.5px;
+}
+
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.nav-link {
+  color: #9ba8bd;
+  padding: 13px;
+  border-radius: 8px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  transition: 0.2s;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: white;
+  background: #1d3151;
+}
+
+.nav-link.active {
+  border-left: 3px solid #3b82f6;
+}
+
+.nav-icon {
+  font-size: 18px;
+  width: 22px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding: 18px 10px 0;
+  border-top: 1px solid #253149;
+  color: #9ba8bd;
+  font-size: 12px;
+}
+
+.sidebar-footer small {
+  display: block;
+  margin-top: 8px;
+  color: #65738b;
+}
+
+.status-dot {
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  background: #22c55e;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-dot.offline {
+  background: #ef4444;
+}
+
+.main-area {
+  flex: 1;
+  min-width: 0;
+}
+
+.topbar {
+  min-height: 88px;
+  padding: 20px 30px;
+  background: #101a2b;
+  border-bottom: 1px solid #253149;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+}
+
+.topbar h1 {
+  font-size: 20px;
+}
+
+.topbar p {
+  color: #8793a9;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.connection-status {
+  color: #a9b6ca;
+  font-size: 12px;
+}
+
+@media (max-width: 800px) {
+  .sidebar {
+    width: 190px;
+  }
+
+  .topbar {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 600px) {
+  .app-layout {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 12px;
+  }
+
+  .brand {
+    padding-bottom: 15px;
+  }
+
+  .navigation {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    padding: 9px;
+    font-size: 11px;
+  }
+
+  .nav-icon {
+    display: none;
+  }
+
+  .nav-heading,
+  .sidebar-footer {
+    display: none;
+  }
+
+  .topbar {
+    min-height: 75px;
+  }
+}

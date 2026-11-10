@@ -1,0 +1,37 @@
+﻿# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Secrets and environment
+.env
+.env.*
+!.env.example
+
+# Biometric database and runtime data
+database/*.json
+
+# Model files
+*.pt
+*.onnx
+
+# Model caches
+.insightface/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp

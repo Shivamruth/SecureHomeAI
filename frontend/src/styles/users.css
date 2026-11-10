@@ -1,0 +1,61 @@
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 25px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 22px;
+  background: #141e30;
+  border: 1px solid #29364b;
+  border-radius: 12px;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #244b78;
+  display: grid;
+  place-items: center;
+  font-size: 21px;
+}
+
+.user-card h3 {
+  font-size: 14px;
+}
+
+.user-card p {
+  color: #8793a9;
+  font-size: 11px;
+  margin: 6px 0;
+}
+
+.user-status {
+  color: #4ade80;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.privacy-note {
+  color: #75849b;
+  font-size: 11px;
+  margin-top: 25px;
+}
+
+@media (max-width: 900px) {
+  .users-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 550px) {
+  .users-grid {
+    grid-template-columns: 1fr;
+  }
+}

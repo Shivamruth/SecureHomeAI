@@ -1,0 +1,154 @@
+.welcome-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 15px;
+}
+
+.welcome-row p {
+  color: #8793a9;
+  margin-top: 7px;
+  font-size: 13px;
+}
+
+.refresh-button {
+  padding: 10px 17px;
+  background: #1d3151;
+  border: 1px solid #36527b;
+  border-radius: 8px;
+  color: white;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.stat-card {
+  background: #141e30;
+  border: 1px solid #253149;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.stat-icon {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: #1e3a5f;
+  font-size: 23px;
+}
+
+.stat-icon.green { background: #153c32; color: #4ade80; }
+.stat-icon.red { background: #45202c; color: #fb7185; }
+.stat-icon.blue { background: #1c3153; color: #60a5fa; }
+.stat-icon.purple { background: #35254e; color: #c084fc; }
+.stat-icon.orange { background: #49341e; color: #fb923c; }
+
+.stat-content p {
+  color: #91a0b7;
+  font-size: 12px;
+}
+
+.stat-content h2 {
+  font-size: 25px;
+  margin: 5px 0;
+}
+
+.stat-content span {
+  color: #687a95;
+  font-size: 10px;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.risk-bar-row {
+  margin-bottom: 18px;
+}
+
+.risk-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 12px;
+}
+
+.risk-label span {
+  color: #aab6c9;
+}
+
+.progress-track,
+.object-track {
+  height: 8px;
+  background: #26344b;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-fill,
+.object-fill {
+  height: 100%;
+  border-radius: 10px;
+}
+
+.progress-fill.low { background: #22c55e; }
+.progress-fill.medium { background: #eab308; }
+.progress-fill.high { background: #ef4444; }
+.progress-fill.unknown { background: #64748b; }
+.object-fill { background: #3b82f6; }
+
+.object-row {
+  display: grid;
+  grid-template-columns: 90px 1fr 30px;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.object-row strong {
+  text-align: right;
+}
+
+.events-panel {
+  margin-top: 20px;
+}
+
+.last-updated {
+  text-align: right;
+  color: #697991;
+  font-size: 11px;
+  margin-top: 15px;
+}
+
+@media (max-width: 1000px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 450px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,7 +1,7 @@
-
 import json
 import os
 from datetime import datetime
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_DIR = os.path.join(BASE_DIR, "database")
@@ -13,15 +13,19 @@ def log_access(
     liveness_result,
     face_recognition_result,
     access_result,
-    reason=None
+    reason=None,
+    risk_level="UNKNOWN",
+    risk_details=None,
+    log_path=LOG_PATH,
 ):
-    """Append one authentication event without silently discarding logs."""
+    """Safely append an authentication event."""
 
-    os.makedirs(DB_DIR, exist_ok=True)
+    directory = os.path.dirname(os.path.abspath(log_path))
+    os.makedirs(directory, exist_ok=True)
 
-    if os.path.exists(LOG_PATH):
+    if os.path.exists(log_path):
         try:
-            with open(LOG_PATH, "r", encoding="utf-8") as file:
+            with open(log_path, "r", encoding="utf-8") as file:
                 logs = json.load(file)
         except (json.JSONDecodeError, OSError) as exc:
             raise RuntimeError(
@@ -30,13 +34,12 @@ def log_access(
 
         if not isinstance(logs, list):
             raise RuntimeError(
-                "Security log must contain a JSON list. "
-                "Existing log was not modified."
+                "Security log must contain a JSON list."
             )
     else:
         logs = []
 
-    log_entry = {
+    entry = {
         "timestamp": datetime.now().astimezone().isoformat(
             timespec="seconds"
         ),
@@ -44,13 +47,16 @@ def log_access(
         "liveness": liveness_result,
         "face_recognition": face_recognition_result,
         "access": access_result,
-        "reason": reason or "Not provided"
+        "risk_level": risk_level,
+        "reason": reason or "Not provided",
     }
 
-    logs.append(log_entry)
+    if isinstance(risk_details, dict):
+        entry["risk_details"] = risk_details
 
-    # Write to a temporary file first, then replace the log.
-    temp_path = LOG_PATH + ".tmp"
+    logs.append(entry)
+
+    temp_path = log_path + ".tmp"
 
     try:
         with open(temp_path, "w", encoding="utf-8") as file:
@@ -59,14 +65,14 @@ def log_access(
             file.flush()
             os.fsync(file.fileno())
 
-        os.replace(temp_path, LOG_PATH)
+        os.replace(temp_path, log_path)
+
     finally:
         if os.path.exists(temp_path):
             os.remove(temp_path)
 
-    print()
     print("Security event logged.")
 
 
 if __name__ == "__main__":
-    print("Logger self-test is disabled to avoid adding fake events.")
+    print("Logger self-test disabled to avoid fake events.")

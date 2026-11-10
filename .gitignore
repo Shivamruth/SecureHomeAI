@@ -37,3 +37,19 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+
+
+# Frontend dependencies and build output
+node_modules/
+dist/
+
+# Downloaded AI models and caches
+**/models/
+**/.cache/
+
+# Backup files
+*_backup*.py
+*_before_*.py
+*_before_*.js
+*_before_*.json
+*.backup*

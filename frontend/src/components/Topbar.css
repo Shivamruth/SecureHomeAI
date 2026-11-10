@@ -1,0 +1,4 @@
+.topbar{height:86px;background:#101b2d;border-bottom:1px solid #26344b;padding:0 28px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.topbar h1{font-size:18px;margin:0 0 6px;color:#f4f7ff}.topbar p{margin:0;color:#86a1c6;font-size:11px}
+.backend-state{display:flex;align-items:center;gap:8px;font-size:10px;white-space:nowrap}.backend-state.online{color:#8cb5e9}.backend-state.online svg{color:#20c879;fill:#20c879}.backend-state.offline{color:#ff929c}
+@media(max-width:600px){.topbar{padding:0 16px;height:76px}.topbar h1{font-size:15px}.backend-state{font-size:0}.backend-state svg{width:18px;height:18px}}
